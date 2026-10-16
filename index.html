@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>INVIA - Bulk Stock Transfer (reference)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--n100:#080808;--n200:#0a0a0a;--n300:#0e0e0e;--n400:#1e1e1e;--n425:#282828;--n475:#222223;--n500:#343436;--n600:#565656;--p:#2a59dd;--p300:#1f43a6;--p375:#222638;--b200:#0a1637;--err:#ed3b39;--sec:#b58401;--sec100:#3c2c00;--t1:#fff;--t2:#c6c6c6;--t3:#a9a9a9;--t4:#787878;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit;margin:0}
+html,body{background:var(--n200)}
+body{color:var(--t1);font:400 14px/1.4 Poppins,system-ui,sans-serif;overflow-x:auto}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+.app{display:flex;min-width:1180px;min-height:100vh}
+aside{width:220px;background:var(--n300);border-right:1px solid var(--n400);padding:22px 14px;flex:none}
+.logo{font-weight:500;font-size:26px;letter-spacing:1px;margin:0 4px 26px}
+aside small{display:block;color:var(--t4);margin:18px 4px 6px}
+aside a{display:block;padding:8px 10px;border-radius:6px;color:var(--t2);margin-bottom:2px}
+aside a.on{background:var(--n400);color:var(--p);box-shadow:inset -3px 0 0 var(--p)}
+main{flex:1;min-width:0}
+.top{height:66px;border-bottom:1px solid var(--n400);display:flex;align-items:center;padding:0 24px;font-size:20px}
+.tabs{display:flex;gap:28px;padding:16px 28px 0;border-bottom:1px solid var(--n400);margin:0 0 0;color:var(--t3);font-size:16px}
+.tabs span{padding-bottom:8px}.tabs .on{color:var(--t1);box-shadow:0 2px 0 var(--p)}
+.wrap{padding:16px 28px}
+.tool{display:flex;justify-content:space-between;margin-bottom:16px;gap:12px}
+.sel,.inp{background:var(--n300);border:1px solid var(--n400);border-radius:8px;height:38px;padding:0 12px;min-width:150px}
+.inp{min-width:240px}
+.btn{height:38px;padding:0 18px;border-radius:8px;border:1px solid transparent;cursor:pointer;background:var(--n425);color:var(--t1)}
+.btn.pri{background:var(--p)}.btn.pri:hover{background:var(--p300)}
+.btn.ghost{background:none;border-color:var(--n500)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.tbl{background:var(--n300);border-radius:8px;overflow:hidden}
+.row{display:grid;grid-template-columns:48px 1fr 1fr 1fr;align-items:center;height:46px;border-top:1px solid var(--n400);font-size:13px}
+.row>*:nth-child(n+3){text-align:center}
+.row.h{height:48px;border-top:0;background:var(--n100);color:var(--t2);font-size:14px}
+.row.h.bar{background:var(--p375);box-shadow:inset 0 0 0 1px var(--p300);grid-template-columns:48px auto 1fr auto auto;gap:10px;padding-right:10px}
+.row.on{background:var(--p375)}
+.row.dis{color:var(--t4)}
+.row input[type=checkbox],.row.h input{accent-color:var(--p);width:16px;height:16px;justify-self:center;cursor:pointer}
+.row input:disabled{cursor:not-allowed}
+.badge{margin-left:8px;font-size:11px;padding:2px 8px;border-radius:10px;background:var(--b200);color:#8fa9f0}
+.note{color:var(--t4);font-size:12px;margin-top:14px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;justify-content:flex-end;z-index:5}
+.ov.open{display:flex}
+.dr{width:500px;max-width:100%;background:var(--n200);border-left:1px solid var(--n400);display:flex;flex-direction:column;height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--n400);font-size:18px;font-weight:500}
+.x{background:none;border:0;cursor:pointer;font-size:18px;color:var(--t3);padding:4px 8px}
+.db{flex:1;overflow:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:flex;flex-direction:column;gap:6px;color:var(--t3);font-size:13px}
+label .sel,textarea{width:100%;color:var(--t1)}
+textarea{background:var(--n300);border:1px solid var(--n400);border-radius:8px;padding:10px 12px;height:64px;resize:none}
+.lh{display:flex;justify-content:space-between;align-items:center;color:var(--t2)}
+.link{background:none;border:0;color:var(--p);cursor:pointer;text-decoration:underline}
+.link:disabled{color:var(--t4);cursor:not-allowed;text-decoration:none}
+.list{background:var(--n300);border-radius:8px}
+.it{padding:12px 14px;border-top:1px solid var(--n400);display:grid;grid-template-columns:1fr 84px auto;gap:8px 10px;align-items:center}
+.it .nm{grid-column:1/3}.it>.x{grid-column:3;grid-row:1;justify-self:end}
+.fs{min-width:0;height:34px;font-size:13px;padding:0 8px}
+.ck{width:64px;height:64px;border-radius:50%;background:var(--b200);color:#8fa9f0;display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid var(--p300)}
+.it:first-child{border-top:0}
+.it .av{color:var(--t4);font-size:12px;grid-column:1/-1}
+.it.dis .nm{color:var(--t4)}
+.q{background:var(--n100);border:1px solid var(--n500);border-radius:6px;height:34px;padding:0 8px;text-align:right;width:100%}
+.q.bad{border-color:var(--err)}
+.q:disabled{opacity:.4}
+.mx{background:var(--n425);border:0;border-radius:6px;height:34px;padding:0 10px;cursor:pointer;font-size:12px}
+.mx:disabled{opacity:.4;cursor:not-allowed}
+.er{grid-column:1/-1;color:var(--err);font-size:12px}
+.df{border-top:1px solid var(--n400);padding:16px 24px;display:flex;align-items:center;gap:10px}
+.sm{flex:1;color:var(--t2);font-size:13px}.sm.w{color:#e6b422}
+.rv{background:var(--n300);border-radius:8px;padding:6px 14px}
+.rv div{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--n400)}
+.rv div:first-child{border-top:0}
+.route{display:flex;align-items:center;gap:10px;background:var(--b200);border-radius:8px;padding:12px 14px}
+.stp{display:flex;gap:8px;font-size:12px;font-weight:400;color:var(--t4);margin-top:4px}.stp .on{color:var(--p)}
+.sum{background:var(--b200);border:1px solid var(--p300);border-radius:10px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start}.sum b{font-size:26px;font-weight:500}.sum small{display:block;color:var(--t2);font-size:13px}
+.grp{background:var(--n300);border-radius:10px;overflow:hidden}.gh{display:flex;justify-content:space-between;padding:10px 14px;background:var(--n100);color:var(--t2);font-size:13px}
+.gr{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;border-top:1px solid var(--n400)}.gr small{display:block;color:#e6b422;font-size:12px}
+.info{display:flex;gap:10px;background:var(--n300);border-radius:8px;padding:12px 14px;color:var(--t2);font-size:13px}
+.pd{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:16px}.card{background:var(--n300);border-radius:12px;padding:20px;margin-bottom:16px}.card h3{font-size:16px;font-weight:500;margin-bottom:14px}.lab{color:var(--t3);font-size:13px;margin-bottom:6px}.card .tbl{background:var(--n200)}
+.ib{background:var(--n425);border:0;border-radius:6px;width:28px;height:28px;cursor:pointer;color:var(--t1)}.ib:disabled{opacity:.4;cursor:not-allowed}.lk{cursor:pointer}.lk:hover{text-decoration:underline}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--n425);border:1px solid var(--p300);border-radius:8px;padding:12px 18px;display:none;z-index:9}
+.toast.on{display:block}
+</style></head>
+<body>
+<div class="app">
+<aside><div class="logo">INVIA</div><small>ERP</small><a>Invoices</a><a>Payments</a><a>Log</a><a class="on">Stock</a><a>Fixed Assets</a><a>Reports</a><small>INSIGHTS</small><a>Main Dashboard</a><a>Sales</a><a>Profitability</a><a>Cash Flow</a></aside>
+<main>
+<div class="top">Stock</div>
+<div id="v1"><div class="tabs"><span class="on">Stock</span><span>Manufacturing</span><span>Locations</span><span>Consignment Partners</span></div>
+<div class="wrap">
+<div class="tool"><select id="loc" class="sel" aria-label="Location"></select><div style="display:flex;gap:8px"><input class="inp" placeholder="Search products" aria-label="Search products"><button class="btn pri">Add Product</button></div></div>
+<div class="tbl" id="tbl"></div>
+<p class="note">Reference build for the INVIA assignment. Quantities follow the selected location. Pick products, then press Transfer.</p>
+</div></div><div id="v2" hidden></div></main></div>
+<div class="ov" id="ov"><div class="dr" id="dr" role="dialog" aria-modal="true" aria-label="Bulk transfer"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const L=['Warehouse 1','Warehouse 2','Zayed Branch','Maadi Branch','District 5 Branch'],W=[.2,.1,.2,.2,.3];
+const P=[...Array(11)].map((_,i)=>{const t=100+50*i;return{id:i+1,name:'Product '+(i+1),s:W.map(w=>Math.round(t*w)),it:0,cost:(i+2)*500000}});
+P[3].s[1]=0;P[3].s[4]+=25;P[8].s[2]=0;P[8].s[0]+=100;
+const S={loc:-1,sel:new Set(),items:[],q:{},from:-1,to:-1,note:'',step:1,src:{},done:null,ref:1000,view:'s',dp:1,dsel:new Set(),mode:'stock',pid:1,locs:[]};
+const $=s=>document.querySelector(s),fmt=n=>n.toLocaleString('en-US'),pid=id=>P.find(p=>p.id==id);
+const qty=p=>S.loc<0?p.s.reduce((a,b)=>a+b,0)+p.it:p.s[S.loc];
+const ok=p=>S.loc<0||p.s[S.loc]>0;
+const opts=(ph,sel,off)=>`<option value="-1">${ph}</option>`+L.map((n,i)=>`<option value="${i}" ${i==sel?'selected':''} ${i==off?'disabled':''}>${n}</option>`).join('');
+$('#loc').innerHTML=opts('All Locations',-1,-9);
+$('#loc').onchange=e=>{S.loc=+e.target.value;S.sel.clear();table()};
+function table(){
+ const can=P.filter(ok),n=S.sel.size;
+ let h=n?`<div class="row h bar"><input type="checkbox" id="all" aria-label="Select all"><span>${n} selected</span><span></span><button class="btn ghost" id="clr">Clear</button><button class="btn pri" id="go">Transfer</button></div>`
+ :`<div class="row h"><input type="checkbox" id="all" aria-label="Select all"><span>Product</span><span>Quantity</span><span>Cost</span></div>`;
+ h+=P.map(p=>`<div class="row ${S.sel.has(p.id)?'on':''} ${ok(p)?'':'dis'}"><input type="checkbox" data-id="${p.id}" ${S.sel.has(p.id)?'checked':''} ${ok(p)?'':'disabled'} aria-label="Select ${p.name}" ${ok(p)?'':'title="No stock at this location"'}><span class="lk" data-o="${p.id}">${p.name}</span><span>${fmt(qty(p))}${S.loc<0&&p.it?`<span class="badge">${p.it} in transit</span>`:''}</span><span>EGP ${fmt(p.cost)}</span></div>`).join('');
+ $('#tbl').innerHTML=h;
+ const a=$('#all');a.checked=n&&n==can.length;a.indeterminate=n>0&&n<can.length;
+ a.onchange=()=>{S.sel=new Set(a.checked?can.map(p=>p.id):[]);table()};
+ document.querySelectorAll('[data-id]').forEach(c=>c.onchange=()=>{c.checked?S.sel.add(+c.dataset.id):S.sel.delete(+c.dataset.id);table()});
+ document.querySelectorAll('[data-o]').forEach(s=>s.onclick=()=>{S.dp=+s.dataset.o;S.dsel=new Set();S.view='d';show()});
+ if(n){$('#clr').onclick=()=>{S.sel.clear();table()};$('#go').onclick=open}
+}
+function open(){S.mode='stock';S.items=[...S.sel];S.q={};S.from=S.loc;S.to=-1;S.note='';S.step=1;S.src={};S.items.forEach(id=>S.src[id]=S.loc);$('#ov').classList.add('open');draw()}
+function close(){$('#ov').classList.remove('open')}
+const av=id=>S.src[id]<0?null:pid(id).s[S.src[id]];
+const rows=l=>l.map(r=>`<div><span>${pid(r.id).name}</span><span>${r.q} units from ${L[r.src]}</span></div>`).join('');
+const tot=l=>`<div><span>Total</span><span>${l.length} products, ${l.reduce((s,r)=>s+ +r.q,0)} units</span></div>`;
+const nt=n=>n?`<label>Note<span style="color:var(--t1)">${n.replace(/</g,'&lt;')}</span></label>`:'';
+const stp=n=>`<div class="stp"><span class="${n==1?'on':''}">Details</span><span>›</span><span class="${n==2?'on':''}">Review</span><span>›</span><span class="${n==3?'on':''}">Done</span></div>`;
+const groups=(l,w)=>{const g={};l.forEach(r=>(g[r.src]=g[r.src]||[]).push(r));return Object.keys(g).map(s=>{const a=g[s],gu=a.reduce((x,r)=>x+ +r.q,0);return`<div class="grp"><div class="gh"><span>From ${L[s]}</span><span>${a.length} product${a.length>1?'s':''}, ${gu} units</span></div>${a.map(r=>`<div class="gr"><span>${pid(r.id).name}${w&&pid(r.id).s[s]-r.q===0?`<small>Leaves 0 at ${L[s]}</small>`:''}</span><span>${r.q} units</span></div>`).join('')}</div>`}).join('')};
+const hd=(t,n)=>`<div class="dh"><div>${t}${n?stp(n):''}</div><button class="x" id="cl" aria-label="Close">✕</button></div>`;
+const lines=()=>S.mode=='product'?S.locs.map(s=>({id:S.pid,src:s,q:+S.q['l'+s]})):S.items.map(id=>({id,src:S.src[id],q:+S.q[id]}));
+function show(){const d=S.view=='d';$('#v1').hidden=d;$('#v2').hidden=!d;d?detail():table()}
+function openP(set){S.mode='product';S.pid=S.dp;S.locs=[...set];S.q={};S.to=-1;S.note='';S.step=1;$('#ov').classList.add('open');draw()}
+function detail(){
+ const p=pid(S.dp),n=S.dsel.size,can=L.map((_,i)=>i).filter(i=>p.s[i]>0);
+ let h=n?`<div class="row h bar"><input type="checkbox" id="dall" aria-label="Select all"><span>${n} selected</span><span></span><button class="btn ghost" id="dclr">Clear</button><button class="btn pri" id="dgo">Transfer</button></div>`:`<div class="row h"><input type="checkbox" id="dall" aria-label="Select all"><span>Location</span><span>Quantity</span><span>Actions</span></div>`;
+ h+=L.map((nm,i)=>`<div class="row ${S.dsel.has(i)?'on':''} ${p.s[i]>0?'':'dis'}"><input type="checkbox" data-l="${i}" ${S.dsel.has(i)?'checked':''} ${p.s[i]>0?'':'disabled'} aria-label="Select ${nm}"><span>${nm}</span><span>${p.s[i]}</span><span><button class="ib" data-t="${i}" ${p.s[i]>0?'':'disabled'} aria-label="Transfer from ${nm}">⇄</button></span></div>`).join('');
+ $('#v2').innerHTML=`<div class="wrap"><div class="pd"><button class="x" id="bkp" aria-label="Back to stock">←</button><b>Product Detail</b></div><div class="card"><h3>Main Information</h3><p class="lab">Product name</p><div class="inp" style="width:100%;display:flex;align-items:center">${p.name}</div></div><div class="card"><h3>Inventory</h3><div class="tbl">${h}</div></div></div>`;
+ $('#bkp').onclick=()=>{S.view='s';show()};
+ const a=$('#dall');a.checked=n&&n==can.length;a.indeterminate=n>0&&n<can.length;
+ a.onchange=()=>{S.dsel=new Set(a.checked?can:[]);detail()};
+ document.querySelectorAll('[data-l]').forEach(c=>c.onchange=()=>{c.checked?S.dsel.add(+c.dataset.l):S.dsel.delete(+c.dataset.l);detail()});
+ document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openP(new Set([+b.dataset.t])));
+ if(n){$('#dclr').onclick=()=>{S.dsel=new Set();detail()};$('#dgo').onclick=()=>openP(S.dsel)}
+}
+function P1(d){
+ const p=pid(S.pid);
+ d.innerHTML=hd('Transfer '+p.name,1)+`<div class="db"><label>To<select class="sel" id="to">${opts('Select location',S.to,-9)}</select></label><div class="lh"><span>${S.locs.length} locations</span><button class="link" id="mxall">Transfer all available</button></div><div class="list">${S.locs.map(s=>`<div class="it"><span class="nm">From ${L[s]}</span><button class="x" data-r="${s}" aria-label="Remove ${L[s]}">✕</button><span class="av" style="grid-column:1">${p.s[s]} available</span><input class="q" id="q${s}" type="number" min="1" inputmode="numeric" placeholder="0" value="${S.q['l'+s]??''}" aria-label="Quantity from ${L[s]}"><button class="mx" data-m="${s}">Max</button><span class="av" id="v${s}"></span><span class="er" id="e${s}"></span></div>`).join('')}</div><div class="info" id="dp" style="display:none;justify-content:space-between"></div><label>Note (optional)<textarea id="nt">${S.note}</textarea></label></div><div class="df"><span class="sm" id="sm"></span><button class="btn ghost" id="cn">Cancel</button><button class="btn pri" id="rv">Review transfer</button></div>`;
+ $('#to').onchange=e=>{S.to=+e.target.value;checkP()};
+ $('#nt').oninput=e=>S.note=e.target.value;
+ $('#cn').onclick=close;$('#cl').onclick=close;$('#rv').onclick=()=>{S.step=2;draw()};
+ $('#mxall').onclick=()=>{S.locs.forEach(s=>{if(s!=S.to)S.q['l'+s]=p.s[s]});P1(d)};
+ d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.q['l'+b.dataset.m]=p.s[b.dataset.m];P1(d)});
+ d.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const s=+b.dataset.r;S.locs=S.locs.filter(x=>x!=s);delete S.q['l'+s];S.dsel.delete(s);detail();P1(d)});
+ S.locs.forEach(s=>{const i=$('#q'+s);i.oninput=()=>{S.q['l'+s]=i.value;checkP()}});
+ checkP();
+}
+function checkP(){
+ const p=pid(S.pid);let bad=0,empty=0,tot=0;
+ S.locs.forEach(s=>{const e=$('#e'+s),i=$('#q'+s),v=$('#v'+s),mx=p.s[s],raw=S.q['l'+s],n=+raw,has=raw!==undefined&&raw!=='';let t='',x='';
+  if(s==S.to){t='Source and destination are the same';bad++}
+  else if(has){if(n>mx){t='Only '+mx+' available at '+L[s];bad++}else if(n<1||!Number.isInteger(n)){t='Enter a whole number of 1 or more';bad++}else{tot+=n}}
+  else empty++;
+  e.textContent=t;v.textContent=x;i.classList.toggle('bad',!!t)});
+ const dp=$('#dp');if(S.to>=0&&tot>0){const c=p.s[S.to];dp.style.display='flex';dp.innerHTML=`<span>${L[S.to]} after transfer</span><b>${c} → ${c+tot}</b>`}else dp.style.display='none';
+ let msg='',w=1;
+ if(!S.locs.length)msg='Select at least one location';
+ else if(S.to<0)msg='Choose a destination';
+ else if(bad)msg='Fix the highlighted rows';
+ else if(empty)msg='Enter a quantity for each location';
+ else{msg=`${S.locs.length} locations, ${S.locs.reduce((a,s)=>a+ +S.q['l'+s],0)} units`;w=0}
+ const sm=$('#sm');sm.textContent=msg;sm.classList.toggle('w',!!w);$('#rv').disabled=!!w;
+}
+function draw(){
+ const d=$('#dr');
+ if(S.step==3){
+  const D=S.done,u=D.l.reduce((s,r)=>s+ +r.q,0),np=new Set(D.l.map(r=>r.id)).size;
+  d.innerHTML=hd('Transfer created',3)+`<div class="db" style="align-items:center;text-align:center;padding-top:48px"><div class="ck">✓</div><div style="font-size:18px;font-weight:500">${np==1?pid(D.l[0].id).name+' is':np+' products are'} on ${np==1?'its':'their'} way</div><p style="color:var(--t2)">${u} units to ${L[D.to]}. They stay in your total until received.</p><span class="badge">In transit · ${D.ref}</span></div><div class="df"><span class="sm"></span><button class="btn ghost" id="dn">Done</button><button class="btn pri" id="vw">View transfer</button></div>`;
+  $('#dn').onclick=close;$('#vw').onclick=()=>{S.step=4;draw()};
+ }else if(S.step==4){
+  const D=S.done;
+  d.innerHTML=hd('Transfer '+D.ref)+`<div class="db"><div class="route">To <b>${L[D.to]}</b><span class="badge">In transit</span></div>${groups(D.l,0)}${nt(D.note)}</div><div class="df"><span class="sm"></span><button class="btn pri" id="dn">Close</button></div>`;
+  $('#dn').onclick=close;
+ }else if(S.step==2){
+  const l=lines(),u=l.reduce((s,r)=>s+r.q,0),k=new Set(l.map(r=>r.src)).size,np=new Set(l.map(r=>r.id)).size;
+  d.innerHTML=hd('Review transfer',2)+`<div class="db"><div class="sum"><div><b>${u} units</b><small>${np} product${np>1?'s':''} from ${k} location${k>1?'s':''} to ${L[S.to]}</small></div><button class="link" id="ed">Edit</button></div>${groups(l,1)}${nt(S.note)}<div class="info"><span>ⓘ</span><span>Stock leaves each source now and shows as in transit until ${L[S.to]} receives it.</span></div></div><div class="df"><button class="btn ghost" id="bk">Back</button><button class="btn pri" id="ok" style="flex:1">Confirm transfer, ${u} units</button></div>`;
+  $('#bk').onclick=$('#ed').onclick=()=>{S.step=1;draw()};
+  $('#ok').onclick=()=>{S.ref++;l.forEach(r=>{const p=pid(r.id);p.s[r.src]-=r.q;p.it+=r.q;S.sel.delete(r.id)});S.done={l:l.map(r=>({...r})),to:S.to,note:S.note,ref:'TR-'+S.ref};S.step=3;S.dsel=new Set();show();draw()};
+ }else if(S.mode=='product'){
+  P1(d);
+ }else{
+  d.innerHTML=hd('Bulk transfer',1)+`<div class="db"><div class="two"><label>From, for all products<select class="sel" id="fr">${opts('Select location',S.from,-9)}</select></label><label>To<select class="sel" id="to">${opts('Select location',S.to,-9)}</select></label></div><div class="lh"><span>${S.items.length} products</span><button class="link" id="mxall" ${S.items.some(id=>S.src[id]>=0)?'':'disabled'}>Transfer all available</button></div><div class="list">${S.items.map(id=>{const p=pid(id),a=av(id);return`<div class="it"><span class="nm">${p.name}</span><button class="x" data-r="${id}" aria-label="Remove ${p.name}">✕</button><select class="sel fs" data-s="${id}" aria-label="From for ${p.name}"><option value="-1">Select source</option>${L.map((n,i)=>`<option value="${i}" ${i==S.src[id]?'selected':''} ${p.s[i]==0&&i!=S.src[id]?'disabled':''}>${n} (${p.s[i]})</option>`).join('')}</select><input class="q" id="q${id}" type="number" min="1" inputmode="numeric" placeholder="0" value="${S.q[id]??''}" ${a>0?'':'disabled'} aria-label="Quantity for ${p.name}"><button class="mx" data-m="${id}" ${a>0?'':'disabled'}>Max</button><span class="av" id="a${id}"></span><span class="er" id="e${id}"></span></div>`}).join('')}</div><label>Note (optional)<textarea id="nt">${S.note}</textarea></label></div><div class="df"><span class="sm" id="sm"></span><button class="btn ghost" id="cn">Cancel</button><button class="btn pri" id="rv">Review transfer</button></div>`;
+  $('#fr').onchange=e=>{S.from=+e.target.value;S.items.forEach(id=>S.src[id]=S.from);S.q={};draw()};
+  $('#to').onchange=e=>{S.to=+e.target.value;check()};
+  $('#nt').oninput=e=>S.note=e.target.value;
+  $('#cn').onclick=close;$('#rv').onclick=()=>{S.step=2;draw()};
+  $('#mxall').onclick=()=>{S.items.forEach(id=>{const m=av(id);if(m>0&&S.src[id]!=S.to)S.q[id]=m});draw()};
+  d.querySelectorAll('[data-s]').forEach(s=>s.onchange=()=>{const id=s.dataset.s;S.src[id]=+s.value;delete S.q[id];draw()});
+  d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.q[b.dataset.m]=av(b.dataset.m);draw()});
+  d.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const id=+b.dataset.r;S.items=S.items.filter(x=>x!=id);S.sel.delete(id);delete S.q[id];delete S.src[id];table();draw()});
+  S.items.forEach(id=>{const i=$('#q'+id);i.oninput=()=>{S.q[id]=i.value;check()}});
+  check();
+ }
+ $('#cl').onclick=close;
+}
+function check(){
+ let bad=0,empty=0,nos=0;
+ S.items.forEach(id=>{const e=$('#e'+id),i=$('#q'+id),a=$('#a'+id),m=av(id),s=S.src[id],raw=S.q[id],v=+raw,has=raw!==undefined&&raw!=='';let t='',x='';
+  if(s<0){nos++;x='Choose where to take this product from'}
+  else{x=m+' available at '+L[s];
+   if(m===0){t='No stock at '+L[s]+'. Choose another source.';bad++}
+   else if(s==S.to){t='Source and destination are the same';bad++}
+   else if(has){if(v>m){t='Only '+m+' available at '+L[s];bad++}else if(v<1||!Number.isInteger(v)){t='Enter a whole number of 1 or more';bad++}else if(S.to>=0){const c=pid(id).s[S.to];x+=` · ${L[S.to]}: ${c} → ${c+v}`}}
+   else empty++}
+  a.textContent=x;e.textContent=t;i.classList.toggle('bad',!!t)});
+ let msg='',w=1;
+ if(!S.items.length)msg='Select at least one product';
+ else if(S.to<0)msg='Choose a destination';
+ else if(nos)msg='Choose a source for each product';
+ else if(bad)msg='Fix the highlighted rows';
+ else if(empty)msg='Enter a quantity for each product';
+ else{const u=S.items.reduce((s,id)=>s+ +S.q[id],0);msg=`${S.items.length} products, ${u} units`;w=0}
+ const s=$('#sm');s.textContent=msg;s.classList.toggle('w',!!w);$('#rv').disabled=!!w;
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
+$('#ov').onclick=e=>{if(e.target.id=='ov')close()};
+document.onkeydown=e=>{if(e.key=='Escape')close()};
+table();
+</script></body></html>
